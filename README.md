@@ -9,7 +9,13 @@ A solution to [Russian AI Cup 2017](https://github.com/Russian-AI-Cup-2017) usin
 Run any checks to verify the package is valid and meets
 quality criteria.
 
-    mvn -T4 clean verify
+    mvn clean verify
+
+## Run
+
+Run application as an executable jar.
+
+    java -jar target/ruai2017.jar
 
 ## Links
 
