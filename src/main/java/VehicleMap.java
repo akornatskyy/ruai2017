@@ -2,6 +2,7 @@ import model.Vehicle;
 import model.VehicleUpdate;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,8 @@ public final class VehicleMap {
     }
 
     if (u.getDurability() > 0) {
-      vehicles.put(id, new Vehicle(vehicle, u));
+      vehicle = new Vehicle(vehicle, u);
+      vehicles.put(id, vehicle);
       for (int groupId : vehicle.getGroups()) {
         VehicleGroup group = groups.get(groupId - 1);
         if (!group.update(vehicle)) {
@@ -36,12 +38,20 @@ public final class VehicleMap {
       vehicles.remove(id);
       for (int groupId : vehicle.getGroups()) {
         VehicleGroup group = groups.get(groupId - 1);
-        if (!group.remove(vehicle.getId())) {
+        if (!group.remove(id)) {
           LOGGER.log("WARN: unable to remove vehicle from group %s", group);
         }
       }
     }
 
     return true;
+  }
+
+  public Collection<Vehicle> getVehicles() {
+    return vehicles.values();
+  }
+
+  public Collection<VehicleGroup> getGroups() {
+    return groups;
   }
 }

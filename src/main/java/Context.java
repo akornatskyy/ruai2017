@@ -24,6 +24,10 @@ public final class Context {
     this.state = state;
   }
 
+  public VehicleMap getAlly() {
+    return ally;
+  }
+
   public void update(World world) {
     long playerId = world.getMyPlayer().getId();
     for (Vehicle vehicle : world.getNewVehicles()) {
