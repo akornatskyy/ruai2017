@@ -26,4 +26,18 @@ public final class MoveAction {
       move.setGroup(type.ordinal() + 1);
     };
   }
+
+  public static Consumer<Move> scaleIn(VehicleGroup group) {
+    return move -> {
+      LOGGER.log("scale in: %s", group);
+
+      Vector v = group.getCenter();
+
+      move.setAction(ActionType.SCALE);
+      move.setFactor(0.1);
+      move.setX(v.x);
+      move.setY(v.y);
+      move.setGroup(group.getGroupId() + 1);
+    };
+  }
 }

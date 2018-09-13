@@ -7,6 +7,7 @@ public final class VehicleGroup {
 
   private final int groupId;
   private final List<Vehicle> vehicles;
+  private final Vector center = new Vector();
 
   public VehicleGroup(int groupId, List<Vehicle> vehicles) {
     this.groupId = groupId;
@@ -21,8 +22,25 @@ public final class VehicleGroup {
     return true;
   }
 
+  public void update() {
+    double cx = 0, cy = 0;
+    int n = vehicles.size();
+    for (Vehicle vehicle : vehicles) {
+      cx += vehicle.getX();
+      cy += vehicle.getY();
+    }
+
+    cx /= n;
+    cy /= n;
+    center.set(cx, cy);
+  }
+
   public int getGroupId() {
     return groupId;
+  }
+
+  public Vector getCenter() {
+    return center;
   }
 
   @Override

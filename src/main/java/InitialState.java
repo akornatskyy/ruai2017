@@ -32,9 +32,12 @@ public final class InitialState implements State {
                 ally.getVehicles().stream()
                     .filter(Vehicle::isSelected)
                     .collect(Collectors.toList()));
+            group.update();
             ally.getGroups().add(group);
 
             LOGGER.log("added selected vehicles to group %s", group);
+
+            MoveAction.scaleIn(group).accept(move);
           });
           queue.add(MoveAction.assign(vehicleType));
         });
