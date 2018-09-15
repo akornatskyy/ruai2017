@@ -43,7 +43,7 @@ public final class CombatState implements State {
       groups.add(group);
     }
 
-    LOGGER.log("clustered enemy groups: %d", grouped.size());
+    LOGGER.log("clustered enemy groups: %s", vehicleMap);
 
     return groups;
   }

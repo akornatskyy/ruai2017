@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class VehicleMap {
 
@@ -53,5 +54,13 @@ public final class VehicleMap {
 
   public Collection<VehicleGroup> getGroups() {
     return groups;
+  }
+
+  @Override
+  public String toString() {
+    return vehicles.size() + "/" + groups.size() + ":" +
+           groups.stream()
+               .map(VehicleGroup::toString)
+               .collect(Collectors.joining(","));
   }
 }
