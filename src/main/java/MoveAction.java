@@ -5,7 +5,10 @@ import model.VehicleType;
 import java.util.function.Consumer;
 
 public final class MoveAction {
+
   private static final Logger LOGGER = Logger.get(MoveAction.class);
+
+  private static int selectedGroupId = -1;
 
   public static Consumer<Move> select(VehicleType type) {
     return move -> {
@@ -34,10 +37,35 @@ public final class MoveAction {
       Vector v = group.getCenter();
 
       move.setAction(ActionType.SCALE);
+      move.setGroup(group.getGroupId() + 1);
       move.setFactor(0.1);
       move.setX(v.x);
       move.setY(v.y);
+    };
+  }
+
+  public static Consumer<Move> select(VehicleGroup group) {
+    return move -> {
+      int groupId = group.getGroupId() + 1;
+      if (selectedGroupId == groupId) {
+        return;
+      }
+
+      selectedGroupId = groupId;
+      move.setAction(ActionType.CLEAR_AND_SELECT);
+      move.setGroup(groupId);
+    };
+  }
+
+  public static Consumer<Move> move(VehicleGroup group) {
+    return move -> {
+      Vector center = group.getCenter();
+      Vector target = group.getTarget();
+
+      move.setAction(ActionType.MOVE);
       move.setGroup(group.getGroupId() + 1);
+      move.setX(target.x - center.x);
+      move.setY(target.y - center.y);
     };
   }
 }

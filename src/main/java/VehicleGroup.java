@@ -9,6 +9,8 @@ public final class VehicleGroup {
   private final List<Vehicle> vehicles;
   private final Vector center = new Vector();
 
+  private Vector target;
+
   public VehicleGroup(int groupId, List<Vehicle> vehicles) {
     this.groupId = groupId;
     this.vehicles = vehicles;
@@ -35,12 +37,24 @@ public final class VehicleGroup {
     center.set(cx, cy);
   }
 
+  public boolean isAlive() {
+    return !vehicles.isEmpty();
+  }
+
   public int getGroupId() {
     return groupId;
   }
 
   public Vector getCenter() {
     return center;
+  }
+
+  public Vector getTarget() {
+    return target;
+  }
+
+  public void setTarget(Vector target) {
+    this.target = target;
   }
 
   @Override

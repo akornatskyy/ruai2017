@@ -14,9 +14,11 @@ public final class CombatState implements State {
       new ConnectedLabeler<>(Vehicle::getX, Vehicle::getY, 8);
 
   private final Context context;
+  private final Steering steering;
 
   public CombatState(Context context) {
     this.context = context;
+    this.steering = new Steering();
   }
 
   @Override
@@ -28,7 +30,16 @@ public final class CombatState implements State {
   public void moves(Queue<Consumer<Move>> queue) {
     Collection<VehicleGroup> groups = clusterEnemyVehicles();
 
-    // TODO:
+    context.getAlly().getGroups().stream()
+        .filter(VehicleGroup::isAlive)
+        .forEach(group -> {
+          Vector target = steering.seekTarget(group);
+          group.setTarget(target);
+          if (target != null) {
+            queue.add(MoveAction.select(group));
+            queue.add(MoveAction.move(group));
+          }
+        });
 
     groups.clear();
   }
