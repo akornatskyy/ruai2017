@@ -12,7 +12,9 @@ public final class MoveAction {
 
   public static Consumer<Move> select(VehicleType type) {
     return move -> {
-      LOGGER.log("select: %s", type);
+      if (LOGGER.isEnabled()) {
+        LOGGER.log("select: %s", type);
+      }
 
       move.setAction(ActionType.CLEAR_AND_SELECT);
       move.setVehicleType(type);
@@ -23,7 +25,9 @@ public final class MoveAction {
 
   public static Consumer<Move> assign(VehicleType type) {
     return move -> {
-      LOGGER.log("assign group: %s", type);
+      if (LOGGER.isEnabled()) {
+        LOGGER.log("assign group: %s", type);
+      }
 
       move.setAction(ActionType.ASSIGN);
       move.setGroup(type.ordinal() + 1);
@@ -32,7 +36,9 @@ public final class MoveAction {
 
   public static Consumer<Move> scaleIn(VehicleGroup group) {
     return move -> {
-      LOGGER.log("scale in: %s", group);
+      if (LOGGER.isEnabled()) {
+        LOGGER.log("scale in: %s", group);
+      }
 
       Vector v = group.getCenter();
 

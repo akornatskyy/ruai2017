@@ -20,7 +20,10 @@ public final class Context {
   }
 
   void setState(State state) {
-    LOGGER.log("activated " + state.getClass().getName());
+    if (LOGGER.isEnabled()) {
+      LOGGER.log("activated " + state.getClass().getName());
+    }
+
     this.state = state;
   }
 

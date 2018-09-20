@@ -19,7 +19,9 @@ public final class InitialState implements State {
 
   @Override
   public void moves(Queue<Consumer<Move>> queue) {
-    LOGGER.log("populating moves");
+    if (LOGGER.isEnabled()) {
+      LOGGER.log("populating moves");
+    }
 
     Stream.of(VehicleType.values())
         .forEach(vehicleType -> {
@@ -35,7 +37,9 @@ public final class InitialState implements State {
             group.update();
             ally.getGroups().add(group);
 
-            LOGGER.log("added selected vehicles to group %s", group);
+            if (LOGGER.isEnabled()) {
+              LOGGER.log("added selected vehicles to group %s", group);
+            }
 
             MoveAction.scaleIn(group).accept(move);
           });
