@@ -14,11 +14,15 @@ public final class CombatState implements State {
       new ConnectedLabeler<>(Vehicle::getX, Vehicle::getY, 8);
 
   private final Context context;
+  private final Estimator estimator;
   private final Steering steering;
 
   public CombatState(Context context) {
     this.context = context;
-    this.steering = new Steering();
+    this.estimator = new CombatEstimator(
+        context.getAlly().getGroups(),
+        context.getEnemy().getGroups());
+    this.steering = new Steering(estimator);
   }
 
   @Override
@@ -30,14 +34,24 @@ public final class CombatState implements State {
   public void moves(Queue<Consumer<Move>> queue) {
     Collection<VehicleGroup> groups = clusterEnemyVehicles();
 
+    estimator.update();
+
     context.getAlly().getGroups().stream()
         .filter(VehicleGroup::isAlive)
         .forEach(group -> {
           Vector target = steering.seekTarget(group);
-          group.setTarget(target);
           if (target != null) {
+            if (LOGGER.isEnabled()) {
+              LOGGER.log("%s %s -> %s", group, group.getCenter(), target);
+            }
+
+            group.setTarget(target);
             queue.add(MoveAction.select(group));
             queue.add(MoveAction.move(group));
+          } else {
+            if (LOGGER.isEnabled()) {
+              LOGGER.log("%s no target", group);
+            }
           }
         });
 
@@ -54,7 +68,9 @@ public final class CombatState implements State {
       groups.add(group);
     }
 
-    LOGGER.log("clustered enemy groups: %s", vehicleMap);
+    if (LOGGER.isEnabled()) {
+      LOGGER.log("clustered enemy groups: %s", vehicleMap);
+    }
 
     return groups;
   }

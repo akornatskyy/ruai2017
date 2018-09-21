@@ -52,7 +52,7 @@ public final class VehicleMap {
     return vehicles.values();
   }
 
-  public Collection<VehicleGroup> getGroups() {
+  public List<VehicleGroup> getGroups() {
     return groups;
   }
 
