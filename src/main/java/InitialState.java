@@ -46,6 +46,6 @@ public final class InitialState implements State {
           queue.add(MoveAction.assign(vehicleType));
         });
 
-    queue.add(m -> context.setState(new CombatState(context)));
+    queue.add(m -> context.setState(new FormationState(context)));
   }
 }
