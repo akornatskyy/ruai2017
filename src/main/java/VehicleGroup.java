@@ -10,6 +10,7 @@ public final class VehicleGroup {
   private final Vector center = new Vector();
 
   private Vector target;
+  private boolean changed = true;
 
   public VehicleGroup(int groupId, List<Vehicle> vehicles) {
     this.groupId = groupId;
@@ -17,14 +18,38 @@ public final class VehicleGroup {
   }
 
   public boolean update(Vehicle vehicle) {
-    return true;
+    long id = vehicle.getId();
+    for (int i = 0; i < vehicles.size(); i++) {
+      if (vehicles.get(i).getId() == id) {
+        vehicles.set(i, vehicle);
+        changed = true;
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public boolean remove(long vehicleId) {
-    return true;
+    for (int i = 0; i < vehicles.size(); i++) {
+      Vehicle vehicle = vehicles.get(i);
+      if (vehicle.getId() == vehicleId) {
+        vehicles.remove(i);
+        changed = true;
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public void update() {
+    if (!changed) {
+      return;
+    }
+
+    changed = false;
+
     double cx = 0, cy = 0;
     int n = vehicles.size();
     for (Vehicle vehicle : vehicles) {
