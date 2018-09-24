@@ -1,12 +1,16 @@
 import model.Vehicle;
+import model.VehicleType;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class VehicleGroup {
 
+  private static final Logger LOGGER = Logger.get(VehicleGroup.class);
+
   private final int groupId;
   private final List<Vehicle> vehicles;
+  private final int[] countOfType = new int[VehicleType.values().length];
   private final Vector center = new Vector();
 
   private Vector target;
@@ -15,6 +19,9 @@ public final class VehicleGroup {
   public VehicleGroup(int groupId, List<Vehicle> vehicles) {
     this.groupId = groupId;
     this.vehicles = vehicles;
+    for (Vehicle vehicle : vehicles) {
+      countOfType[vehicle.getType().ordinal()] += 1;
+    }
   }
 
   public boolean update(Vehicle vehicle) {
@@ -22,6 +29,7 @@ public final class VehicleGroup {
     for (int i = 0; i < vehicles.size(); i++) {
       if (vehicles.get(i).getId() == id) {
         vehicles.set(i, vehicle);
+        countOfType[vehicle.getType().ordinal()] -= 1;
         changed = true;
         return true;
       }
@@ -62,6 +70,12 @@ public final class VehicleGroup {
     center.set(cx, cy);
   }
 
+  public boolean canCollide(VehicleGroup other) {
+    boolean ta = this.isAerial();
+    boolean oa = other.isAerial();
+    return (ta & oa) || (!ta && !oa);
+  }
+
   public boolean isAlive() {
     return !vehicles.isEmpty();
   }
@@ -79,6 +93,10 @@ public final class VehicleGroup {
   }
 
   public void setTarget(Vector target) {
+    if (LOGGER.isEnabled()) {
+      LOGGER.log("%s %s -> %s", this, center, target);
+    }
+
     this.target = target;
   }
 
@@ -95,7 +113,12 @@ public final class VehicleGroup {
         .sorted()
         .collect(Collectors.joining());
 
-    // e.g. G0FH120 G4T100
+    // e.g. 0FH120 4T100
     return String.format("%d%s%d", groupId, types, vehicles.size());
+  }
+
+  private boolean isAerial() {
+    return countOfType[VehicleType.FIGHTER.ordinal()] > 0 ||
+           countOfType[VehicleType.HELICOPTER.ordinal()] > 0;
   }
 }
