@@ -28,10 +28,6 @@ public final class FormationState implements State {
           Vector target = steering.seekTarget(group);
           group.setTarget(target);
           if (target != null) {
-            if (LOGGER.isEnabled()) {
-              LOGGER.log("%s %s -> %s", group, group.getCenter(), target);
-            }
-
             queue.add(MoveAction.select(group));
             queue.add(MoveAction.move(group));
             return true;

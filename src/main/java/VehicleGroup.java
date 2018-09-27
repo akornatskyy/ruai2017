@@ -15,6 +15,7 @@ public final class VehicleGroup {
 
   private Vector target;
   private boolean changed = true;
+  private double minSpeed = 0;
 
   public VehicleGroup(int groupId, List<Vehicle> vehicles) {
     this.groupId = groupId;
@@ -29,7 +30,6 @@ public final class VehicleGroup {
     for (int i = 0; i < vehicles.size(); i++) {
       if (vehicles.get(i).getId() == id) {
         vehicles.set(i, vehicle);
-        countOfType[vehicle.getType().ordinal()] -= 1;
         changed = true;
         return true;
       }
@@ -43,6 +43,7 @@ public final class VehicleGroup {
       Vehicle vehicle = vehicles.get(i);
       if (vehicle.getId() == vehicleId) {
         vehicles.remove(i);
+        countOfType[vehicle.getType().ordinal()] -= 1;
         changed = true;
         return true;
       }
@@ -60,14 +61,20 @@ public final class VehicleGroup {
 
     double cx = 0, cy = 0;
     int n = vehicles.size();
+    double speed = Double.MAX_VALUE;
     for (Vehicle vehicle : vehicles) {
       cx += vehicle.getX();
       cy += vehicle.getY();
+      if (speed > vehicle.getMaxSpeed()) {
+        speed = vehicle.getMaxSpeed();
+      }
     }
 
     cx /= n;
     cy /= n;
     center.set(cx, cy);
+
+    this.minSpeed = speed;
   }
 
   public boolean canCollide(VehicleGroup other) {
@@ -98,6 +105,10 @@ public final class VehicleGroup {
     }
 
     this.target = target;
+  }
+
+  public double getMinSpeed() {
+    return minSpeed;
   }
 
   @Override
