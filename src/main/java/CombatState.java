@@ -41,10 +41,6 @@ public final class CombatState implements State {
         .forEach(group -> {
           Vector target = steering.seekTarget(group);
           if (target != null) {
-            if (LOGGER.isEnabled()) {
-              LOGGER.log("%s %s -> %s", group, group.getCenter(), target);
-            }
-
             group.setTarget(target);
             queue.add(MoveAction.select(group));
             queue.add(MoveAction.move(group));
