@@ -16,6 +16,7 @@ public final class VehicleGroup {
   private Vector target;
   private boolean changed = true;
   private double minSpeed = 0;
+  private int numberOfWeakUnits = 0;
 
   public VehicleGroup(int groupId, List<Vehicle> vehicles) {
     this.groupId = groupId;
@@ -62,7 +63,12 @@ public final class VehicleGroup {
     double cx = 0, cy = 0;
     int n = vehicles.size();
     double speed = Double.MAX_VALUE;
+    int wn = 0;
     for (Vehicle vehicle : vehicles) {
+      if (vehicle.getDurability() < vehicle.getMaxDurability()) {
+        wn++;
+      }
+
       cx += vehicle.getX();
       cy += vehicle.getY();
       if (speed > vehicle.getMaxSpeed()) {
@@ -75,6 +81,7 @@ public final class VehicleGroup {
     center.set(cx, cy);
 
     this.minSpeed = speed;
+    this.numberOfWeakUnits = wn;
   }
 
   public boolean canCollide(VehicleGroup other) {
@@ -85,6 +92,14 @@ public final class VehicleGroup {
 
   public boolean isAlive() {
     return !vehicles.isEmpty();
+  }
+
+  public int size() {
+    return vehicles.size();
+  }
+
+  public int getCountOfType(VehicleType t) {
+    return countOfType[t.ordinal()];
   }
 
   public int getGroupId() {
@@ -109,6 +124,10 @@ public final class VehicleGroup {
 
   public double getMinSpeed() {
     return minSpeed;
+  }
+
+  public int getNumberOfWeakUnits() {
+    return numberOfWeakUnits;
   }
 
   @Override
