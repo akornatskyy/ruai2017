@@ -17,6 +17,7 @@ public final class VehicleGroup {
   private boolean changed = true;
   private double minSpeed = 0;
   private int numberOfWeakUnits = 0;
+  private int health = 0;
 
   public VehicleGroup(int groupId, List<Vehicle> vehicles) {
     this.groupId = groupId;
@@ -64,7 +65,9 @@ public final class VehicleGroup {
     int n = vehicles.size();
     double speed = Double.MAX_VALUE;
     int wn = 0;
+    int durability = 0;
     for (Vehicle vehicle : vehicles) {
+      durability += vehicle.getDurability();
       if (vehicle.getDurability() < vehicle.getMaxDurability()) {
         wn++;
       }
@@ -82,6 +85,7 @@ public final class VehicleGroup {
 
     this.minSpeed = speed;
     this.numberOfWeakUnits = wn;
+    this.health = durability;
   }
 
   public boolean canCollide(VehicleGroup other) {
@@ -128,6 +132,10 @@ public final class VehicleGroup {
 
   public int getNumberOfWeakUnits() {
     return numberOfWeakUnits;
+  }
+
+  public int getHealth() {
+    return health;
   }
 
   @Override
