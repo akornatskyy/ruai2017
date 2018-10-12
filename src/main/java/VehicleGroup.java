@@ -12,6 +12,7 @@ public final class VehicleGroup {
   private final List<Vehicle> vehicles;
   private final int[] countOfType = new int[VehicleType.values().length];
   private final Vector center = new Vector();
+  private final Vector weakCenter = new Vector();
 
   private Vector target;
   private boolean changed = true;
@@ -61,7 +62,7 @@ public final class VehicleGroup {
 
     changed = false;
 
-    double cx = 0, cy = 0;
+    double cx = 0, cy = 0, wx = 0, wy = 0;
     int n = vehicles.size();
     double speed = Double.MAX_VALUE;
     int wn = 0;
@@ -69,6 +70,8 @@ public final class VehicleGroup {
     for (Vehicle vehicle : vehicles) {
       durability += vehicle.getDurability();
       if (vehicle.getDurability() < vehicle.getMaxDurability()) {
+        wx += vehicle.getX();
+        wy += vehicle.getY();
         wn++;
       }
 
@@ -83,6 +86,12 @@ public final class VehicleGroup {
     cy /= n;
     center.set(cx, cy);
 
+    if (wn == 0) {
+      weakCenter.set(cx, cy);
+    } else {
+      weakCenter.set(wx / wn, wy / wn);
+    }
+
     this.minSpeed = speed;
     this.numberOfWeakUnits = wn;
     this.health = durability;
@@ -92,6 +101,10 @@ public final class VehicleGroup {
     boolean ta = this.isAerial();
     boolean oa = other.isAerial();
     return (ta & oa) || (!ta && !oa);
+  }
+
+  public Vector getWeakCenter() {
+    return weakCenter;
   }
 
   public boolean isAlive() {
@@ -151,7 +164,7 @@ public final class VehicleGroup {
         .sorted()
         .collect(Collectors.joining());
 
-    // e.g. 0FH120 4T100
+    // e.g. G0FH120 G4T100
     return String.format("%d%s%d", groupId, types, vehicles.size());
   }
 
