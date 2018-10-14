@@ -103,6 +103,50 @@ public final class VehicleGroup {
     return (ta & oa) || (!ta && !oa);
   }
 
+  public double distance(Vector next, VehicleGroup other) {
+    Vector delta = new Vector();
+    Vector ot = other.getTarget();
+    if (ot != null) {
+      Vector oc = other.getCenter();
+      double otherTicks = oc.len(ot) / other.minSpeed;
+      double ticks = next.len(center) / minSpeed;
+      if (otherTicks > ticks) {
+        otherTicks = ticks;
+      }
+
+      delta.set(ot);
+      delta.sub(oc);
+      delta.norm();
+      delta.scl(otherTicks);
+    }
+
+    List<Vector> otherShifted = other.vehicles.stream()
+        .map(v -> {
+          Vector p = new Vector();
+          p.set(v.getX(), v.getY());
+          p.add(delta);
+          return p;
+        })
+        .collect(Collectors.toList());
+
+    delta.set(next);
+    delta.sub(center);
+    double md = Double.MAX_VALUE;
+    for (Vehicle v : vehicles) {
+      Vector p = new Vector();
+      p.set(v.getX(), v.getY());
+      p.add(delta);
+      for (Vector v2 : otherShifted) {
+        double d = p.len2(v2.x, v2.y);
+        if (d < md) {
+          md = d;
+        }
+      }
+    }
+
+    return Math.sqrt(md);
+  }
+
   public Vector getWeakCenter() {
     return weakCenter;
   }
