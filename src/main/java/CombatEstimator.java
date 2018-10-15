@@ -40,10 +40,32 @@ public final class CombatEstimator implements Estimator {
   }
 
   private double ally(VehicleGroup group, VehicleGroup other, Vector target) {
-    return 0;
+    double d = target.len(other.getCenter());
+    double p = 0;
+    double c = battlefield.collide(group, other);
+    if (c != 0) {
+      if (d <= 96) {
+        double d2 = group.distance(target, other);
+        if (d2 <= 16) {
+          p = c * Math.pow(d2, -3);
+        }
+      }
+    } else {
+      double s = battlefield.shield(group, other);
+      if (s != 0) {
+        p = s * Math.exp(-d / 4);
+      }
+    }
+
+    return p;
   }
 
   private double enemy(VehicleGroup ally, VehicleGroup enemy, Vector target) {
-    return 0;
+    double as = ally.getMinSpeed();
+    double es = enemy.getMinSpeed();
+    double a = battlefield.attack(ally, enemy);
+    double s = a > 0 ? as / es : es / as;
+    double d = target.len(enemy.getWeakCenter());
+    return a * s * Math.exp(-d / 5);
   }
 }
