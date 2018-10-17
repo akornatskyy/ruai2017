@@ -38,7 +38,7 @@ public final class RemoteProcessClient implements Closeable {
         socket.setTcpNoDelay(true);
         socket.connect(new InetSocketAddress(host, port));
 
-        inputStream = socket.getInputStream();
+        inputStream = new BufferedInputStream(socket.getInputStream());
         outputStream = socket.getOutputStream();
         outputStreamBuffer = new ByteArrayOutputStream(BUFFER_SIZE_BYTES);
     }
