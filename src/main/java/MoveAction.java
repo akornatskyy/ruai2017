@@ -74,4 +74,20 @@ public final class MoveAction {
       move.setY(target.y - center.y);
     };
   }
+
+  public static Consumer<Move> rotate(VehicleGroup group) {
+    return move -> {
+      if (LOGGER.isEnabled()) {
+        LOGGER.log("rotate: %s", group);
+      }
+
+      Vector v = group.getCenter();
+
+      move.setAction(ActionType.ROTATE);
+      move.setGroup(group.getGroupId() + 1);
+      move.setX(v.x);
+      move.setY(v.y);
+      move.setAngle(Math.PI);
+    };
+  }
 }

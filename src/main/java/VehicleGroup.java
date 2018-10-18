@@ -103,6 +103,41 @@ public final class VehicleGroup {
     return (ta & oa) || (!ta && !oa);
   }
 
+  public double density() {
+    final double UNIT_RADIUS = 2;
+    final double UNIT_DENSITY = 1 / (4 * UNIT_RADIUS * UNIT_RADIUS);
+    int n = vehicles.size();
+    if (n <= 1) {
+      return n * UNIT_DENSITY;
+    }
+
+    Vehicle vehicle = vehicles.get(0);
+    double left = vehicle.getX(), top = vehicle.getY();
+    double right = left, bottom = top;
+    for (int i = 1; i < n; i++) {
+      vehicle = vehicles.get(i);
+      double x = vehicle.getX(), y = vehicle.getY();
+      if (x < left) {
+        left = x;
+      } else if (x > right) {
+        right = x;
+      }
+
+      if (y < top) {
+        top = y;
+      } else if (y > bottom) {
+        bottom = y;
+      }
+    }
+
+    double area = (right - left) * (bottom - top);
+    double d = n / area;
+
+    // LOGGER.log("%s density: %s, area: %s", this, d, area);
+
+    return d;
+  }
+
   public double distance(Vector next, VehicleGroup other) {
     Vector delta = new Vector();
     Vector ot = other.getTarget();

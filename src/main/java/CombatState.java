@@ -39,6 +39,16 @@ public final class CombatState implements State {
     context.getAlly().getGroups().stream()
         .filter(VehicleGroup::isAlive)
         .forEach(group -> {
+          if (group.getTarget() != null) {
+            if (group.density() < 0.006) {
+              group.setTarget(null);
+              queue.add(MoveAction.select(group));
+              queue.add(MoveAction.rotate(group));
+              queue.add(MoveAction.rotate(group));
+              queue.add(MoveAction.scaleIn(group));
+            }
+          }
+
           Vector target = steering.seekTarget(group);
           if (target != null) {
             group.setTarget(target);
