@@ -11,7 +11,7 @@ public final class CombatState implements State {
   private static final Logger LOGGER = Logger.get(CombatState.class);
 
   private static final ConnectedLabeler<Vehicle> LABELER =
-      new ConnectedLabeler<>(Vehicle::getX, Vehicle::getY, 8);
+      new ConnectedLabeler<>(Vehicle::getX, Vehicle::getY, 4);
 
   private final Context context;
   private final Estimator estimator;
