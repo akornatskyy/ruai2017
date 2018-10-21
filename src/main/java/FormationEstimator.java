@@ -5,19 +5,27 @@ public final class FormationEstimator implements Estimator {
 
   private static final Vector[][] TARGETS = Arrays.stream(
       new double[][][] {
-          {{0, 0}, {1, 0}, {0, 1}},
-          {{1, 2}, {2, 1}, {0, 2}, {2, 0}, {2, 2}},
-          {{1, 1}, {0, 1}, {1, 0}},
-          {{1, 1}, {0, 1}, {1, 0}},
-          {{0, 2}, {2, 0}, {1, 2}, {2, 1}, {1, 1}}
+          /*
+            +---+---+---+
+            |A  |AIH|T F|
+            +---+---+---+
+            |AIH|TIH|T F|
+            +---+---+---+
+            |T F|T F|  F|
+            +---+---+---+
+          */
+          {{0, 0}, {0, 1}, {1, 0}}, // A
+          {{0, 2}, {2, 0}, {1, 2}, {2, 1}, {2, 2}}, // F
+          {{0, 1}, {1, 0}, {1, 1}}, // H
+          {{0, 1}, {1, 0}, {1, 1}}, // I
+          {{0, 2}, {2, 0}, {1, 2}, {2, 1}, {1, 1}} // T
+      }).map(route -> Arrays.stream(route)
+      .map(c -> {
+        Vector v = new Vector();
+        v.set(c[0] * 75 + 45, c[1] * 75 + 45);
+        return v;
       })
-      .map(route -> Arrays.stream(route)
-          .map(c -> {
-            Vector v = new Vector();
-            v.set(c[0] * 75 + 45, c[1] * 75 + 45);
-            return v;
-          })
-          .toArray(Vector[]::new))
+      .toArray(Vector[]::new))
       .toArray(Vector[][]::new);
 
   private final List<VehicleGroup> allies;
@@ -52,14 +60,13 @@ public final class FormationEstimator implements Estimator {
 
   private static double repulsive(
       VehicleGroup group, VehicleGroup other, Vector target) {
-    double p = 0;
     if (group.canCollide(other)) {
       double d = target.len(other.getCenter());
       if (d <= 96) {
-        p = -Math.pow(d, -2);
+        return -100 * Math.pow(d, -3);
       }
     }
 
-    return p;
+    return 0;
   }
 }
