@@ -57,6 +57,19 @@ public final class Vector {
     y *= scalar;
   }
 
+  public boolean equals(Vector other) {
+    if (this == other) {
+      return true;
+    }
+
+    if (other == null) {
+      return false;
+    }
+
+    final double EPSILON = 0.01;
+    return Math.abs(other.x - x) < EPSILON && Math.abs(other.y - y) < EPSILON;
+  }
+
   @Override
   public String toString() {
     return String.format("(%.2f, %.2f)", x, y);

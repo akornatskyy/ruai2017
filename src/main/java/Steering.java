@@ -7,7 +7,6 @@ import java.util.stream.IntStream;
 public final class Steering {
 
   private static Logger LOGGER = Logger.get(Steering.class, true);
-  private static final int TICKS_PER_MOVE = 5;
 
   private static final int NUMBER_OF_DIRECTIONS = 64;
   private static final List<Vector> DIRECTIONS = IntStream
@@ -22,6 +21,8 @@ public final class Steering {
         return direction;
       })
       .collect(Collectors.toList());
+
+  private static final int TICKS_PER_MOVE = 5;
   private static final double[] TICKS = IntStream
       .range(TICKS_PER_MOVE, TICKS_PER_MOVE * 20 + 1)
       .mapToDouble(t -> t * TICKS_PER_MOVE)
@@ -69,6 +70,21 @@ public final class Steering {
           if (LOGGER.isEnabled()) {
             LOGGER.log("%s %s t: %.0f, p: %4.3e %4.3e",
                        group, dp.direction, dp.tick, p, dp.delta);
+          }
+
+          Vector target = group.getTarget();
+          if (target != null && !center.equals(target)) {
+            Vector opposite = new Vector();
+            opposite.set(center);
+            opposite.sub(target);
+            opposite.norm();
+            if (dp.direction.equals(opposite)) {
+              if (LOGGER.isEnabled()) {
+                LOGGER.log("WARN: omitting direction for %s", group);
+              }
+
+              return null;
+            }
           }
 
           return dp.target;
