@@ -7,8 +7,12 @@ public final class FormationState implements State {
 
   private static final Logger LOGGER = Logger.get(FormationState.class);
 
+  private static final int MAX_NUMBER_OF_MOVES = 60;
+
   private final Context context;
   private final Steering steering;
+
+  private long totalNumberOfMoves;
 
   public FormationState(Context context) {
     this.context = context;
@@ -23,7 +27,7 @@ public final class FormationState implements State {
 
   @Override
   public void moves(Queue<Consumer<Move>> queue) {
-    long c = context.getAlly().getGroups().stream()
+    long numberOfMoves = context.getAlly().getGroups().stream()
         .filter(group -> {
           Vector target = steering.seekTarget(group);
           group.setTarget(target);
@@ -36,9 +40,11 @@ public final class FormationState implements State {
           return false;
         })
         .count();
-    if (c == 0) {
+    totalNumberOfMoves += numberOfMoves;
+    if (numberOfMoves == 0 || totalNumberOfMoves >= MAX_NUMBER_OF_MOVES) {
       if (LOGGER.isEnabled()) {
-        LOGGER.log("done");
+        LOGGER.log("number of moves: %d, total: %d",
+                   numberOfMoves, totalNumberOfMoves);
       }
 
       context.setState(new CombatState(context));
