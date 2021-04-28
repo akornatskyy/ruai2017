@@ -1,0 +1,16 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "03:00"
+  open-pull-requests-limit: 15
+  ignore:
+  - dependency-name: org.testng:testng
+    versions:
+    - 7.3.0
+    - 7.4.0
+  - dependency-name: org.apache.maven.plugins:maven-shade-plugin
+    versions:
+    - 3.2.4
