@@ -5,10 +5,10 @@ on:
     - cron: "0 4 * * 0"  # At 04:00 on Sunday.
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
