@@ -1,6 +1,6 @@
 # Russian AI Cup 2017
 
-[![Build Status](https://travis-ci.org/akornatskyy/ruai2017.svg?branch=master)](https://travis-ci.org/akornatskyy/ruai2017)
+[![tests](https://github.com/akornatskyy/ruai2017/actions/workflows/tests.yaml/badge.svg)](https://github.com/akornatskyy/ruai2017/actions/workflows/tests.yaml)
 
 A solution to [Russian AI Cup 2017](https://github.com/Russian-AI-Cup-2017) using Java.
 
