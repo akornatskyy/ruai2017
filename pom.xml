@@ -10,6 +10,10 @@
 
   <name>ruai2017</name>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.testng</groupId>
@@ -28,12 +32,12 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
-          <encoding>UTF-8</encoding>
+          <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.4.1</version>
         <configuration>
           <minimizeJar>true</minimizeJar>
           <createDependencyReducedPom>false</createDependencyReducedPom>
